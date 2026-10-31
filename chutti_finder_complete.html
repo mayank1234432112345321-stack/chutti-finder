@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chutti Finder</title>
+<style>
+:root{--navy:#101d35;--navy2:#172b4d;--blue:#3978d6;--sky:#eaf2ff;--ink:#18243a;--muted:#718096;--line:#e7ecf3;--bg:#f5f7fb;--gold:#f3c969;--white:#fff;--shadow:0 18px 50px rgba(20,38,68,.10)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+button,input,select{font:inherit}button{cursor:pointer}
+.topbar{height:72px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 max(5vw,22px);position:sticky;top:0;z-index:5}
+.brand{display:flex;align-items:center;gap:11px;font-weight:850;letter-spacing:-.7px;font-size:21px}.brandmark{width:38px;height:38px;border-radius:12px;background:linear-gradient(145deg,#17355f,#3978d6);display:grid;place-items:center;color:#fff;font-size:19px}
+.brand span:last-child{color:#3978d6}.top-actions{display:flex;gap:10px;align-items:center}.year-chip{font-size:13px;font-weight:700;color:#3e5c87;background:#edf3fc;padding:9px 13px;border-radius:30px}
+.admin-btn{border:1px solid #dce4ef;background:#fff;color:#233858;border-radius:11px;padding:10px 15px;font-weight:700}.admin-btn:hover{background:#f2f6fc}
+.hero{background:radial-gradient(circle at 85% 15%,rgba(75,139,226,.32),transparent 27%),linear-gradient(120deg,#101d35,#19365f 72%,#214a7b);color:#fff;padding:56px max(5vw,22px) 70px;position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;width:350px;height:350px;border:1px solid rgba(255,255,255,.09);border-radius:50%;right:7%;top:-160px;box-shadow:0 0 0 35px rgba(255,255,255,.025),0 0 0 75px rgba(255,255,255,.02)}
+.hero-inner{max-width:1120px;margin:auto;position:relative;z-index:1}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;color:#c7d9f4;font-size:12px;font-weight:800;letter-spacing:1.7px;text-transform:uppercase}.eyebrow:before{content:"";width:23px;height:2px;background:var(--gold)}
+h1{font-size:clamp(42px,6vw,66px);line-height:1.04;letter-spacing:-2.8px;margin:17px 0 12px;font-weight:850}.hero p{color:#c8d6e9;font-size:16px;margin:0;max-width:530px;line-height:1.7}
+.search-panel{margin-top:34px;background:#fff;border-radius:18px;padding:20px;box-shadow:0 20px 45px rgba(0,0,0,.18);display:grid;grid-template-columns:1fr 1.2fr 1fr auto;gap:12px;align-items:end;max-width:1000px}
+.field label{display:block;font-size:11px;font-weight:800;color:#718096;letter-spacing:1px;margin:0 0 8px 3px;text-transform:uppercase}
+.field select{width:100%;height:48px;border:1px solid #e2e8f0;border-radius:11px;background:#fbfcfe;padding:0 12px;color:#253650;font-weight:650;outline:none}.field select:focus{border-color:#5b91e4;box-shadow:0 0 0 3px #e6efff}
+.search-btn{height:48px;border:0;border-radius:11px;background:linear-gradient(135deg,#3978d6,#2457a6);color:white;font-weight:800;padding:0 22px;box-shadow:0 7px 16px rgba(57,120,214,.25)}.search-btn:hover{filter:brightness(1.07)}
+main{max-width:1120px;margin:0 auto;padding:35px 22px 70px}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:15px;margin-bottom:19px}.section-head h2{font-size:23px;letter-spacing:-.6px;margin:0}.section-head p{margin:5px 0 0;color:var(--muted);font-size:13px}
+.count{font-size:12px;color:#48658e;background:#eaf1fb;padding:8px 12px;border-radius:30px;font-weight:750;white-space:nowrap}
+.months{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:32px}
+.month{border:1px solid var(--line);background:#fff;border-radius:12px;padding:13px 8px;color:#53647d;font-size:12px;font-weight:800;transition:.18s}
+.month:hover,.month.active{border-color:#8bb2ed;background:#edf4ff;color:#245ca9;transform:translateY(-2px)}
+.holiday-list{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}
+.holiday{background:#fff;border:1px solid var(--line);border-radius:15px;padding:17px;display:flex;gap:15px;align-items:center;box-shadow:0 3px 12px rgba(20,38,68,.025)}
+.datebox{width:58px;min-width:58px;height:62px;border-radius:12px;background:#edf4ff;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#285da6}
+.datebox strong{font-size:22px;line-height:1}.datebox span{font-size:10px;font-weight:850;letter-spacing:1px;margin-top:5px}
+.holiday-info{min-width:0;flex:1}.holiday-info h3{font-size:15px;margin:0 0 6px;letter-spacing:-.2px}.meta{display:flex;gap:7px;align-items:center;flex-wrap:wrap;color:#7b8798;font-size:11px}.tag{background:#f0f4f9;color:#60728b;border-radius:20px;padding:4px 8px;font-weight:750}
+.empty{grid-column:1/-1;background:#fff;border:1px dashed #cbd5e1;border-radius:15px;padding:38px 20px;text-align:center;color:#718096}.empty strong{display:block;color:#33445e;margin-bottom:6px}
+footer{border-top:1px solid var(--line);padding:22px;text-align:center;color:#8a96a8;font-size:12px}
+.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(9,19,35,.58);z-index:20;align-items:center;justify-content:center;padding:18px}.modal-backdrop.show{display:flex}
+.modal{width:min(620px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:18px;box-shadow:0 25px 70px rgba(0,0,0,.25);padding:23px}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:17px}.modal-head h2{margin:0;font-size:21px}.close{border:0;background:#f1f4f8;border-radius:9px;width:34px;height:34px;font-size:20px;color:#59687d}
+.note{background:#fff8e7;color:#80621d;border:1px solid #f4e4b8;border-radius:10px;padding:11px 13px;font-size:12px;line-height:1.5;margin-bottom:16px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form-grid .full{grid-column:1/-1}.form-field label{display:block;font-size:12px;font-weight:750;color:#58677d;margin:0 0 6px}.form-field input,.form-field select{width:100%;height:43px;border:1px solid #dce3ec;border-radius:9px;padding:0 11px;outline:none}.form-field input:focus,.form-field select:focus{border-color:#6b9de8}
+.form-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:17px}.secondary{background:#f0f3f8;border:0;color:#45556e;padding:11px 16px;border-radius:9px;font-weight:750}.primary{background:#245eae;border:0;color:#fff;padding:11px 17px;border-radius:9px;font-weight:750}
+.admin-content{display:none}.admin-content.show{display:block}.admin-toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.admin-toolbar button{border:0;border-radius:9px;padding:10px 13px;font-size:12px;font-weight:750}.add-btn{background:#e8f1ff;color:#245da8}.logout-btn{background:#f2f4f7;color:#5b6678}.admin-items{max-height:260px;overflow:auto;border:1px solid var(--line);border-radius:10px}.admin-item{padding:11px 13px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;font-size:12px}.admin-item:last-child{border-bottom:0}.admin-item span{flex:1}.admin-item button{border:0;border-radius:7px;padding:6px 9px;font-size:11px;font-weight:700}.edit{background:#edf4ff;color:#245da8}.delete{background:#fff0f0;color:#b34545}
+.login{display:flex;gap:9px}.login input{flex:1;min-width:0;border:1px solid #dce3ec;border-radius:9px;padding:0 12px;height:43px}.login button{border:0;background:#245eae;color:#fff;border-radius:9px;padding:0 16px;font-weight:750}
+.toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,20px);background:#142b4d;color:white;padding:11px 16px;border-radius:10px;font-size:13px;opacity:0;pointer-events:none;transition:.25s;z-index:50}.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:800px){.search-panel{grid-template-columns:1fr 1fr}.search-btn{grid-column:1/-1}.months{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:560px){.topbar{height:62px}.brand{font-size:18px}.hero{padding-top:39px;padding-bottom:42px}h1{letter-spacing:-1.7px}.search-panel{grid-template-columns:1fr;padding:15px}.search-btn{grid-column:auto}.months{grid-template-columns:repeat(3,1fr)}.holiday-list{grid-template-columns:1fr}.section-head{align-items:start;flex-direction:column}.form-grid{grid-template-columns:1fr}.form-grid .full{grid-column:auto}.year-chip{display:none}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><div class="brandmark">✦</div><div>Chutti <span>Finder</span></div></div>
+  <div class="top-actions"><div class="year-chip">HOLIDAY CALENDAR · INDIA</div><button class="admin-btn" id="openAdmin">Admin Login</button></div>
+</header>
+<section class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">YOUR HOLIDAY PLANNER</div>
+    <h1>Find your next<br>day off.</h1>
+    <p>Explore public holidays across India, discover state-wise celebrations, and plan your year with ease.</p>
+    <div class="search-panel">
+      <div class="field"><label for="year">Select year</label><select id="year"></select></div>
+      <div class="field"><label for="region">Select region</label><select id="region"></select></div>
+      <div class="field"><label for="month">Select month</label><select id="month"><option value="all">All months</option></select></div>
+      <button class="search-btn" id="explore">Explore Holidays →</button>
+    </div>
+  </div>
+</section>
+<main>
+  <div class="section-head"><div><h2 id="listTitle">Holidays in 2026</h2><p id="listSubtitle">All India · Browse the holiday calendar</p></div><div class="count" id="holidayCount">0 holidays</div></div>
+  <div class="months" id="months"></div>
+  <div class="holiday-list" id="holidayList"></div>
+</main>
+<footer>© <span id="footerYear"></span> Chutti Finder · Plan better, celebrate more.<br><span style="display:block;max-width:900px;margin:9px auto 0;line-height:1.6">Festival dates are indicative and may vary by region, calendar tradition or moon sighting. Government-declared holidays differ by state, employer and institution. 2026 festival data is a broad starter calendar; verify official notifications before relying on a date.</span></footer>
+
+<div class="modal-backdrop" id="adminModal">
+ <div class="modal">
+  <div class="modal-head"><h2>Admin Dashboard</h2><button class="close" id="closeAdmin">×</button></div>
+  <div id="loginArea">
+   <div class="note">Demo admin access. Default password: <b>admin123</b>. This single-file version stores changes in this browser only; use a secure backend before publishing publicly.</div>
+   <div class="login"><input id="adminPassword" type="password" placeholder="Enter admin password"><button id="loginBtn">Login</button></div>
+  </div>
+  <div class="admin-content" id="adminContent">
+   <div class="note">Changes are saved in this browser. Sundays and second Saturdays are generated automatically. Add a holiday with its date, region and category. State-specific holidays appear for that state and in All India results.</div>
+   <div class="admin-toolbar"><button class="add-btn" id="addHoliday">＋ Add holiday</button><button class="logout-btn" id="logout">Log out</button></div>
+   <div class="admin-items" id="adminItems"></div>
+  </div>
+ </div>
+</div>
+<div class="modal-backdrop" id="holidayModal">
+ <div class="modal">
+  <div class="modal-head"><h2 id="formTitle">Add holiday</h2><button class="close" id="closeHoliday">×</button></div>
+  <div class="form-grid">
+   <div class="form-field full"><label>Holiday name</label><input id="hName" placeholder="e.g. Republic Day"></div>
+   <div class="form-field"><label>Date</label><input id="hDate" type="date"></div>
+   <div class="form-field"><label>Category</label><select id="hCategory"><option>National</option><option>Religious</option><option>Regional</option><option>Festival</option><option>Other</option></select></div>
+   <div class="form-field full"><label>Region</label><select id="hRegion"></select></div>
+  </div>
+  <div class="form-actions"><button class="secondary" id="cancelHoliday">Cancel</button><button class="primary" id="saveHoliday">Save holiday</button></div>
+ </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const states=["All India","Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chhattisgarh","Goa","Gujarat","Haryana","Himachal Pradesh","Jharkhand","Karnataka","Kerala","Madhya Pradesh","Maharashtra","Manipur","Meghalaya","Mizoram","Nagaland","Odisha","Punjab","Rajasthan","Sikkim","Tamil Nadu","Telangana","Tripura","Uttar Pradesh","Uttarakhand","West Bengal","Andaman and Nicobar Islands","Chandigarh","Dadra and Nagar Haveli and Daman and Diu","Delhi","Jammu and Kashmir","Ladakh","Lakshadweep","Puducherry"];
+const months=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const base=[
+ {id:"f01",name:"New Year's Day",date:"2026-01-01",category:"Observance",region:"All India",faith:"General"},
+ {id:"f02",name:"Hazarat Ali's Birthday",date:"2026-01-03",category:"Muslim festival",region:"All India",faith:"Islam"},
+ {id:"f03",name:"Guru Gobind Singh Jayanti",date:"2026-01-05",category:"Sikh festival",region:"All India",faith:"Sikhism"},
+ {id:"f04",name:"Lohri",date:"2026-01-13",category:"Festival",region:"All India",faith:"Hindu / Punjabi"},
+ {id:"f05",name:"Makar Sankranti",date:"2026-01-14",category:"Festival",region:"All India",faith:"Hindu"},
+ {id:"f06",name:"Pongal",date:"2026-01-14",category:"Festival",region:"Tamil Nadu",faith:"Hindu"},
+ {id:"f07",name:"Magh Bihu",date:"2026-01-14",category:"Festival",region:"Assam",faith:"Hindu / Assamese"},
+ {id:"f08",name:"Vasant Panchami / Basant Panchami",date:"2026-01-23",category:"Festival",region:"All India",faith:"Hindu"},
+ {id:"f09",name:"Subhas Chandra Bose Jayanti",date:"2026-01-23",category:"Observance",region:"All India",faith:"National"},
+ {id:"f10",name:"Republic Day",date:"2026-01-26",category:"National holiday",region:"All India",faith:"National"},
+ {id:"f11",name:"Guru Ravidas Jayanti",date:"2026-02-01",category:"Religious observance",region:"All India",faith:"Hindu / Ravidassia"},
+ {id:"f12",name:"Shab-e-Barat",date:"2026-02-04",category:"Muslim festival",region:"All India",faith:"Islam"},
+ {id:"f13",name:"Maharishi Dayanand Saraswati Jayanti",date:"2026-02-12",category:"Religious observance",region:"All India",faith:"Hindu"},
+ {id:"f14",name:"Maha Shivaratri",date:"2026-02-15",category:"Festival",region:"All India",faith:"Hindu"},
+ {id:"f15",name:"Shivaji Jayanti",date:"2026-02-19",category:"Regional observance",region:"Maharashtra",faith:"Historical"},
+ {id:"f16",name:"Ramadan begins (expected)",date:"2026-02-19",category:"Muslim observance",region:"All India",faith:"Islam"},
+ {id:"f17",name:"Holika Dahan",date:"2026-03-03",category:"Festival",region:"All India",faith:"Hindu"},
+ {id:"f18",name:"Holi",date:"2026-03-04",category:"Festival / holiday",region:"All India",faith:"Hindu"},
+ {id:"f19",name:"Ugadi",date:"2026-03-19",category:"Regional festival",region:"Andhra Pradesh",faith:"Hindu"},
+ {id:"f20",name:"Gudi Padwa",date:"2026-03-19",category:"Regional festival",region:"Maharashtra",faith:"Hindu"},
+ {id:"f21",name:"Cheti Chand",date:"2026-03-19",category:"Religious festival",region:"All India",faith:"Sindhi"},
+ {id:"f22",name:"Jamat-ul-Vida (expected)",date:"2026-03-20",category:"Muslim observance",region:"All India",faith:"Islam"},
+ {id:"f23",name:"Eid-ul-Fitr / Ramzan Id (expected)",date:"2026-03-21",category:"Muslim festival / holiday",region:"All India",faith:"Islam"},
+ {id:"f24",name:"Chaitra Navratri begins",date:"2026-03-19",category:"Festival",region:"All India",faith:"Hindu"},
+ {id:"f25",name:"Ram Navami",date:"2026-03-26",category:"Festival / holiday",region:"All India",faith:"Hindu"},
+ {id:"f26",name:"Mahavir Jayanti",date:"2026-03-31",category:"Jain festival / holiday",region:"All India",faith:"Jainism"},
+ {id:"f27",name:"Hanuman Jayanti",date:"2026-04-02",category:"Festival",region:"All India",faith:"Hindu"},
+ {id:"f28",name:"Maundy Thursday",date:"2026-04-02",category:"Christian observance",region:"All India",faith:"Christianity"},
+ {id:"f29",name:"Good Friday",date:"2026-04-03",category:"Christian holiday",region:"All India",faith:"Christianity"},
+ {id:"f30",name:"Easter Sunday",date:"2026-04-05",category:"Christian festival",region:"All India",faith:"Christianity"},
+ {id:"f31",name:"Vaisakhi / Baisakhi",date:"2026-04-14",category:"Festival",region:"Punjab",faith:"Sikhism / Hindu"},
+ {id:"f32",name:"Tamil New Year / Puthandu",date:"2026-04-14",category:"Regional festival",region:"Tamil Nadu",faith:"Hindu"},
+ {id:"f33",name:"Vishu",date:"2026-04-14",category:"Regional festival",region:"Kerala",faith:"Hindu"},
+ {id:"f34",name:"Ambedkar Jayanti",date:"2026-04-14",category:"National observance",region:"All India",faith:"National"},
+ {id:"f35",name:"Bohag Bihu",date:"2026-04-15",category:"Regional festival",region:"Assam",faith:"Assamese"},
+ {id:"f36",name:"Buddha Purnima",date:"2026-05-01",category:"Buddhist festival / holiday",region:"All India",faith:"Buddhism"},
+ {id:"f37",name:"Rabindranath Tagore Jayanti",date:"2026-05-09",category:"Cultural observance",region:"West Bengal",faith:"Cultural"},
+ {id:"f38",name:"Eid-ul-Zuha / Bakrid (expected)",date:"2026-05-27",category:"Muslim festival / holiday",region:"All India",faith:"Islam"},
+ {id:"f39",name:"Muharram / Ashura (expected)",date:"2026-06-26",category:"Muslim festival / holiday",region:"All India",faith:"Islam"},
+ {id:"f40",name:"Rath Yatra",date:"2026-07-16",category:"Festival",region:"Odisha",faith:"Hindu"},
+ {id:"f41",name:"Guru Purnima",date:"2026-07-29",category:"Religious observance",region:"All India",faith:"Hindu / Buddhist"},
+ {id:"f42",name:"Friendship Day (India)",date:"2026-08-02",category:"Observance",region:"All India",faith:"General"},
+ {id:"f43",name:"Parsi New Year / Navroz",date:"2026-08-15",category:"Parsi festival",region:"All India",faith:"Zoroastrianism"},
+ {id:"f44",name:"Independence Day",date:"2026-08-15",category:"National holiday",region:"All India",faith:"National"},
+ {id:"f45",name:"Onam / Thiru Onam",date:"2026-08-26",category:"Regional festival",region:"Kerala",faith:"Hindu / Malayali"},
+ {id:"f46",name:"Milad-un-Nabi / Eid-e-Milad (expected)",date:"2026-08-26",category:"Muslim festival / holiday",region:"All India",faith:"Islam"},
+ {id:"f47",name:"Raksha Bandhan",date:"2026-08-28",category:"Festival",region:"All India",faith:"Hindu"},
+ {id:"f48",name:"Janmashtami",date:"2026-09-04",category:"Festival",region:"All India",faith:"Hindu"},
+ {id:"f49",name:"Ganesh Chaturthi",date:"2026-09-14",category:"Festival",region:"All India",faith:"Hindu"},
+ {id:"f50",name:"Mahalaya",date:"2026-10-10",category:"Festival",region:"West Bengal",faith:"Hindu"},
+ {id:"f51",name:"Navratri begins (Sharad)",date:"2026-10-11",category:"Festival",region:"All India",faith:"Hindu"},
+ {id:"f52",name:"Durga Puja - Maha Saptami",date:"2026-10-18",category:"Festival",region:"West Bengal",faith:"Hindu"},
+ {id:"f53",name:"Durga Puja - Maha Ashtami",date:"2026-10-19",category:"Festival",region:"West Bengal",faith:"Hindu"},
+ {id:"f54",name:"Dussehra / Vijayadashami",date:"2026-10-20",category:"Festival / holiday",region:"All India",faith:"Hindu"},
+ {id:"f55",name:"Maharishi Valmiki Jayanti",date:"2026-10-26",category:"Religious observance",region:"All India",faith:"Hindu"},
+ {id:"f56",name:"Karwa Chauth",date:"2026-10-29",category:"Festival",region:"All India",faith:"Hindu"},
+ {id:"f57",name:"Diwali / Deepavali",date:"2026-11-08",category:"Festival / holiday",region:"All India",faith:"Hindu / Jain"},
+ {id:"f58",name:"Naraka Chaturdashi",date:"2026-11-08",category:"Festival",region:"All India",faith:"Hindu"},
+ {id:"f59",name:"Govardhan Puja",date:"2026-11-09",category:"Festival",region:"All India",faith:"Hindu"},
+ {id:"f60",name:"Bhai Dooj",date:"2026-11-11",category:"Festival",region:"All India",faith:"Hindu"},
+ {id:"f61",name:"Chhath Puja",date:"2026-11-15",category:"Festival",region:"Bihar",faith:"Hindu"},
+ {id:"f62",name:"Guru Nanak Jayanti",date:"2026-11-24",category:"Sikh festival / holiday",region:"All India",faith:"Sikhism"},
+ {id:"f63",name:"Guru Tegh Bahadur Martyrdom Day",date:"2026-11-24",category:"Sikh observance",region:"All India",faith:"Sikhism"},
+ {id:"f64",name:"Hanukkah begins (at sunset)",date:"2026-12-05",category:"Jewish festival",region:"All India",faith:"Judaism"},
+ {id:"f65",name:"Christmas Eve",date:"2026-12-24",category:"Christian observance",region:"All India",faith:"Christianity"},
+ {id:"f66",name:"Christmas Day",date:"2026-12-25",category:"Christian holiday",region:"All India",faith:"Christianity"},
+ {id:"f67",name:"New Year's Eve",date:"2026-12-31",category:"Observance",region:"All India",faith:"General"}
+];
+let holidays=JSON.parse(localStorage.getItem("cf_holidays")||"null")||base;
+let editId=null,selectedMonth="all",isLoggedIn=false;
+const $=id=>document.getElementById(id);
+function save(){localStorage.setItem("cf_holidays",JSON.stringify(holidays))}
+function fillSelect(el,items,first){el.innerHTML=first||"";items.forEach(x=>{let o=document.createElement("option");o.value=x;o.textContent=x;el.appendChild(o)})}
+fillSelect($("year"),Array.from({length:101},(_,i)=>String(2000+i)),"");
+$("year").value="2026";
+fillSelect($("region"),states,"");
+fillSelect($("hRegion"),states,"");
+months.forEach((m,i)=>{let o=document.createElement("option");o.value=String(i+1).padStart(2,"0");o.textContent=m;$("month").appendChild(o)});
+months.forEach((m,i)=>{let b=document.createElement("button");b.className="month";b.textContent=m.slice(0,3).toUpperCase();b.dataset.month=String(i+1).padStart(2,"0");b.addEventListener("click",()=>{selectedMonth=b.dataset.month;$("month").value=selectedMonth;render()});$("months").appendChild(b)});
+function prettyDate(s){let d=new Date(s+"T12:00:00");return {day:d.getDate(),mon:months[d.getMonth()].slice(0,3).toUpperCase(),full:d.toLocaleDateString("en-IN",{day:"numeric",month:"long",year:"numeric"})}}
+function visible(){
+ let y=Number($("year").value),r=$("region").value,m=$("month").value;
+ let out=holidays.filter(h=>h.date.startsWith(y+"-")&&(r==="All India"||h.region==="All India"||h.region===r)&&(m==="all"||h.date.slice(5,7)===m));
+ // Automatically include every Sunday and the second Saturday of every month.
+ let start=new Date(y,0,1),end=new Date(y+1,0,1);
+ for(let d=new Date(start);d<end;d.setDate(d.getDate()+1)){
+   let iso=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+   if(m!=="all"&&iso.slice(5,7)!==m)continue;
+   if(d.getDay()===0)out.push({id:"sun-"+iso,name:"Sunday",date:iso,category:"Weekly off",region:"All India",faith:"Weekly"});
+   if(d.getDay()===6&&Math.ceil(d.getDate()/7)===2)out.push({id:"sat2-"+iso,name:"Second Saturday",date:iso,category:"Monthly off",region:"All India",faith:"Weekly"});
+ }
+ return out.sort((a,b)=>a.date.localeCompare(b.date)||a.name.localeCompare(b.name));
+}
+function render(){
+ let y=$("year").value,r=$("region").value,m=$("month").value;selectedMonth=m;
+ $("listTitle").textContent="Holidays in "+y;
+ $("listSubtitle").textContent=(r==="All India"?"All India":r)+" · "+(m==="all"?"All months":months[Number(m)-1])+" · Holiday calendar";
+ let arr=visible();$("holidayCount").textContent=arr.length+" "+(arr.length===1?"holiday":"holidays");
+ document.querySelectorAll(".month").forEach(b=>b.classList.toggle("active",m===b.dataset.month));
+ $("holidayList").innerHTML="";
+ if(!arr.length){$("holidayList").innerHTML='<div class="empty"><strong>No holidays added yet</strong>There are no saved holidays for this selection. Admin can add holidays from the dashboard.</div>';return}
+ arr.forEach(h=>{let d=prettyDate(h.date),card=document.createElement("article");card.className="holiday";card.innerHTML=`<div class="datebox"><strong>${d.day}</strong><span>${d.mon}</span></div><div class="holiday-info"><h3></h3><div class="meta"><span class="tag"></span><span class="region"></span><span class="faith"></span></div></div>`;card.querySelector("h3").textContent=h.name;card.querySelector(".tag").textContent=h.category;card.querySelector(".region").textContent=h.region;card.querySelector(".faith").textContent=h.faith||""; $("holidayList").appendChild(card)})
+}
+$("explore").onclick=render;$("year").onchange=render;$("region").onchange=render;$("month").onchange=()=>{selectedMonth=$("month").value;render()};
+$("footerYear").textContent=new Date().getFullYear();
+function toast(msg){$("toast").textContent=msg;$("toast").classList.add("show");setTimeout(()=>$("toast").classList.remove("show"),2300)}
+function showModal(id){$(id).classList.add("show")}function hideModal(id){$(id).classList.remove("show")}
+$("openAdmin").onclick=()=>{showModal("adminModal");$("adminPassword").value="";if(isLoggedIn)showAdmin()};
+$("closeAdmin").onclick=()=>hideModal("adminModal");$("closeHoliday").onclick=()=>hideModal("holidayModal");$("cancelHoliday").onclick=()=>hideModal("holidayModal");
+$("loginBtn").onclick=()=>{if($("adminPassword").value==="admin123"){isLoggedIn=true;showAdmin()}else toast("Incorrect password")};
+$("adminPassword").addEventListener("keydown",e=>{if(e.key==="Enter")$("loginBtn").click()});
+function showAdmin(){$("loginArea").style.display="none";$("adminContent").classList.add("show");adminList()}
+$("logout").onclick=()=>{isLoggedIn=false;$("loginArea").style.display="block";$("adminContent").classList.remove("show")};
+function adminList(){let box=$("adminItems");box.innerHTML="";let arr=[...holidays].sort((a,b)=>a.date.localeCompare(b.date));if(!arr.length){box.textContent="No holidays yet.";return}arr.forEach(h=>{let row=document.createElement("div");row.className="admin-item";let span=document.createElement("span");span.textContent=prettyDate(h.date).full+" · "+h.name+" ("+h.region+")";let e=document.createElement("button");e.className="edit";e.textContent="Edit";e.onclick=()=>openForm(h.id);let d=document.createElement("button");d.className="delete";d.textContent="Delete";d.onclick=()=>{if(confirm("Delete "+h.name+"?")){holidays=holidays.filter(x=>x.id!==h.id);save();adminList();render();toast("Holiday deleted")}};row.append(span,e,d);box.appendChild(row)})}
+$("addHoliday").onclick=()=>openForm(null);
+function openForm(id){editId=id;let h=holidays.find(x=>x.id===id);$("formTitle").textContent=h?"Edit holiday":"Add holiday";$("hName").value=h?.name||"";$("hDate").value=h?.date||$("year").value+"-01-01";$("hCategory").value=h?.category||"National";$("hRegion").value=h?.region||"All India";showModal("holidayModal")}
+$("saveHoliday").onclick=()=>{let name=$("hName").value.trim(),date=$("hDate").value;if(!name||!date){toast("Please enter a holiday name and date");return}let item={id:editId||("h"+Date.now()),name,date,category:$("hCategory").value,region:$("hRegion").value};if(editId)holidays=holidays.map(x=>x.id===editId?item:x);else holidays.push(item);save();hideModal("holidayModal");adminList();$("year").value=date.slice(0,4);$("region").value=item.region;$("month").value=date.slice(5,7);render();toast(editId?"Holiday updated":"Holiday added");editId=null};
+render();
+</script>
+</body>
+</html>
