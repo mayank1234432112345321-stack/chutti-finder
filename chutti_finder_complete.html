@@ -11,7 +11,7 @@ button,input,select{font:inherit}button{cursor:pointer}
 .topbar{height:72px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 max(5vw,22px);position:sticky;top:0;z-index:5}
 .brand{display:flex;align-items:center;gap:11px;font-weight:850;letter-spacing:-.7px;font-size:21px}.brandmark{width:38px;height:38px;border-radius:12px;background:linear-gradient(145deg,#17355f,#3978d6);display:grid;place-items:center;color:#fff;font-size:19px}
 .brand span:last-child{color:#3978d6}.top-actions{display:flex;gap:10px;align-items:center}.year-chip{font-size:13px;font-weight:700;color:#3e5c87;background:#edf3fc;padding:9px 13px;border-radius:30px}
-.admin-btn{border:1px solid #dce4ef;background:#fff;color:#233858;border-radius:11px;padding:10px 15px;font-weight:700}.admin-btn:hover{background:#f2f6fc}
+.admin-btn,.notify-btn{border:1px solid #dce4ef;background:#fff;color:#233858;border-radius:11px;padding:10px 15px;font-weight:700}.admin-btn:hover,.notify-btn:hover{background:#f2f6fc}.notify-btn.active{background:#eaf2ff;border-color:#8bb2ed;color:#245da8}
 .hero{background:radial-gradient(circle at 85% 15%,rgba(75,139,226,.32),transparent 27%),linear-gradient(120deg,#101d35,#19365f 72%,#214a7b);color:#fff;padding:56px max(5vw,22px) 70px;position:relative;overflow:hidden}
 .hero:after{content:"";position:absolute;width:350px;height:350px;border:1px solid rgba(255,255,255,.09);border-radius:50%;right:7%;top:-160px;box-shadow:0 0 0 35px rgba(255,255,255,.025),0 0 0 75px rgba(255,255,255,.02)}
 .hero-inner{max-width:1120px;margin:auto;position:relative;z-index:1}
@@ -50,7 +50,7 @@ footer{border-top:1px solid var(--line);padding:22px;text-align:center;color:#8a
 <body>
 <header class="topbar">
   <div class="brand"><div class="brandmark">✦</div><div>Chutti <span>Finder</span></div></div>
-  <div class="top-actions"><div class="year-chip">HOLIDAY CALENDAR · INDIA</div><button class="admin-btn" id="openAdmin">Admin Login</button></div>
+  <div class="top-actions"><div class="year-chip">HOLIDAY CALENDAR · INDIA</div><button class="notify-btn" id="notifyBtn" title="Kal ki chhutti ka reminder on karein">🔔 Reminders</button><button class="admin-btn" id="openAdmin">Admin Login</button></div>
 </header>
 <section class="hero">
   <div class="hero-inner">
@@ -209,10 +209,34 @@ function render(){
 $("explore").onclick=render;$("year").onchange=render;$("region").onchange=render;$("month").onchange=()=>{selectedMonth=$("month").value;render()};
 $("footerYear").textContent=new Date().getFullYear();
 function toast(msg){$("toast").textContent=msg;$("toast").classList.add("show");setTimeout(()=>$("toast").classList.remove("show"),2300)}
+
+// Browser reminder: notification permission is requested only after the user presses the button.
+// A full closed-browser reminder needs a deployed HTTPS push server; this single HTML file
+// checks while it is open and remembers that reminders are enabled on this browser.
+function isoDate(date){return date.getFullYear()+"-"+String(date.getMonth()+1).padStart(2,"0")+"-"+String(date.getDate()).padStart(2,"0")}
+function tomorrowHoliday(){
+ const tomorrow=new Date();tomorrow.setHours(0,0,0,0);tomorrow.setDate(tomorrow.getDate()+1);
+ const day=isoDate(tomorrow), region=$("region").value;
+ return holidays.find(h=>h.date===day&&(h.region==="All India"||h.region===region));
+}
+function checkTomorrowReminder(){
+ if(localStorage.getItem("cf_reminders")!=="on"||Notification.permission!=="granted")return;
+ const today=isoDate(new Date()),holiday=tomorrowHoliday();
+ if(!holiday||localStorage.getItem("cf_last_reminder")===today)return;
+ new Notification("Congratulations! Kal Chhutti Hai 🎉",{body:`Kal ${holiday.name} ke kaaran chhutti hai. Aaram ka plan bana lo!`,icon:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23245eae'/%3E%3Ctext x='32' y='44' font-size='35' text-anchor='middle'%3E✦%3C/text%3E%3C/svg%3E"});
+ localStorage.setItem("cf_last_reminder",today);
+}
+function updateReminderButton(){const on=localStorage.getItem("cf_reminders")==="on";$("notifyBtn").classList.toggle("active",on);$("notifyBtn").textContent=on?"🔔 Reminders On":"🔔 Reminders"}
+$("notifyBtn").onclick=async()=>{
+ if(!("Notification" in window)){toast("Is browser mein notifications supported nahi hain");return}
+ const permission=await Notification.requestPermission();
+ if(permission!=="granted"){toast("Reminder ke liye notifications allow karein");return}
+ localStorage.setItem("cf_reminders","on");updateReminderButton();checkTomorrowReminder();toast("Kal ki chhutti ka reminder on ho gaya!");
+};
 function showModal(id){$(id).classList.add("show")}function hideModal(id){$(id).classList.remove("show")}
 $("openAdmin").onclick=()=>{showModal("adminModal");$("adminPassword").value="";if(isLoggedIn)showAdmin()};
 $("closeAdmin").onclick=()=>hideModal("adminModal");$("closeHoliday").onclick=()=>hideModal("holidayModal");$("cancelHoliday").onclick=()=>hideModal("holidayModal");
-$("loginBtn").onclick=()=>{if($("adminPassword").value==="admin123"){isLoggedIn=true;showAdmin()}else toast("Incorrect password")};
+$("loginBtn").onclick=()=>{if($("adminPassword").value==="mayank@7326"){isLoggedIn=true;showAdmin()}else toast("Incorrect password")};
 $("adminPassword").addEventListener("keydown",e=>{if(e.key==="Enter")$("loginBtn").click()});
 function showAdmin(){$("loginArea").style.display="none";$("adminContent").classList.add("show");adminList()}
 $("logout").onclick=()=>{isLoggedIn=false;$("loginArea").style.display="block";$("adminContent").classList.remove("show")};
@@ -220,6 +244,9 @@ function adminList(){let box=$("adminItems");box.innerHTML="";let arr=[...holida
 $("addHoliday").onclick=()=>openForm(null);
 function openForm(id){editId=id;let h=holidays.find(x=>x.id===id);$("formTitle").textContent=h?"Edit holiday":"Add holiday";$("hName").value=h?.name||"";$("hDate").value=h?.date||$("year").value+"-01-01";$("hCategory").value=h?.category||"National";$("hRegion").value=h?.region||"All India";showModal("holidayModal")}
 $("saveHoliday").onclick=()=>{let name=$("hName").value.trim(),date=$("hDate").value;if(!name||!date){toast("Please enter a holiday name and date");return}let item={id:editId||("h"+Date.now()),name,date,category:$("hCategory").value,region:$("hRegion").value};if(editId)holidays=holidays.map(x=>x.id===editId?item:x);else holidays.push(item);save();hideModal("holidayModal");adminList();$("year").value=date.slice(0,4);$("region").value=item.region;$("month").value=date.slice(5,7);render();toast(editId?"Holiday updated":"Holiday added");editId=null};
+updateReminderButton();
+checkTomorrowReminder();
+setInterval(checkTomorrowReminder,60*1000);
 render();
 </script>
 </body>
