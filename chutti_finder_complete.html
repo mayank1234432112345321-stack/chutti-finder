@@ -6,13 +6,13 @@
 <title>Chutti Finder</title>
 <style>
 :root{--navy:#101d35;--navy2:#172b4d;--blue:#3978d6;--sky:#eaf2ff;--ink:#18243a;--muted:#718096;--line:#e7ecf3;--bg:#f5f7fb;--gold:#f3c969;--white:#fff;--shadow:0 18px 50px rgba(20,38,68,.10)}
-*{box-sizing:border-box}body{margin:0;background:#07152c;color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}.state-background{position:fixed;inset:0;z-index:-2;background:center/cover no-repeat var(--state-image);transition:background-image .7s ease;transform:scale(1.03)}.state-background:after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(3,11,28,.82),rgba(7,24,52,.60),rgba(7,14,31,.80))}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
 button,input,select{font:inherit}button{cursor:pointer}
-.topbar{height:72px;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.55);display:flex;align-items:center;justify-content:space-between;padding:0 max(5vw,22px);position:sticky;top:0;z-index:5}
+.topbar{height:72px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 max(5vw,22px);position:sticky;top:0;z-index:5}
 .brand{display:flex;align-items:center;gap:11px;font-weight:850;letter-spacing:-.7px;font-size:21px}.brandmark{width:38px;height:38px;border-radius:12px;background:linear-gradient(145deg,#17355f,#3978d6);display:grid;place-items:center;color:#fff;font-size:19px}
 .brand span:last-child{color:#3978d6}.top-actions{display:flex;gap:10px;align-items:center}.year-chip{font-size:13px;font-weight:700;color:#3e5c87;background:#edf3fc;padding:9px 13px;border-radius:30px}
 .admin-btn,.notify-btn{border:1px solid #dce4ef;background:#fff;color:#233858;border-radius:11px;padding:10px 15px;font-weight:700}.admin-btn:hover,.notify-btn:hover{background:#f2f6fc}.notify-btn.active{background:#eaf2ff;border-color:#8bb2ed;color:#245da8}
-.hero{background:rgba(3,14,35,.30);color:#fff;padding:56px max(5vw,22px) 70px;position:relative;overflow:hidden}
+.hero{background:radial-gradient(circle at 85% 15%,rgba(75,139,226,.32),transparent 27%),linear-gradient(120deg,#101d35,#19365f 72%,#214a7b);color:#fff;padding:56px max(5vw,22px) 70px;position:relative;overflow:hidden}
 .hero:after{content:"";position:absolute;width:350px;height:350px;border:1px solid rgba(255,255,255,.09);border-radius:50%;right:7%;top:-160px;box-shadow:0 0 0 35px rgba(255,255,255,.025),0 0 0 75px rgba(255,255,255,.02)}
 .hero-inner{max-width:1120px;margin:auto;position:relative;z-index:1}
 .eyebrow{display:inline-flex;align-items:center;gap:8px;color:#c7d9f4;font-size:12px;font-weight:800;letter-spacing:1.7px;text-transform:uppercase}.eyebrow:before{content:"";width:23px;height:2px;background:var(--gold)}
@@ -21,19 +21,19 @@ h1{font-size:clamp(42px,6vw,66px);line-height:1.04;letter-spacing:-2.8px;margin:
 .field label{display:block;font-size:11px;font-weight:800;color:#718096;letter-spacing:1px;margin:0 0 8px 3px;text-transform:uppercase}
 .field select{width:100%;height:48px;border:1px solid #e2e8f0;border-radius:11px;background:#fbfcfe;padding:0 12px;color:#253650;font-weight:650;outline:none}.field select:focus{border-color:#5b91e4;box-shadow:0 0 0 3px #e6efff}
 .search-btn{height:48px;border:0;border-radius:11px;background:linear-gradient(135deg,#3978d6,#2457a6);color:white;font-weight:800;padding:0 22px;box-shadow:0 7px 16px rgba(57,120,214,.25)}.search-btn:hover{filter:brightness(1.07)}
-main{max-width:1120px;margin:0 auto;padding:35px 22px 70px;color:#fff}.section-head h2{color:#fff}.section-head p{color:#d2dced}.count{color:#e4efff;background:rgba(32,84,151,.58);border:1px solid rgba(255,255,255,.18)}
+main{max-width:1120px;margin:0 auto;padding:35px 22px 70px}
 .section-head{display:flex;justify-content:space-between;align-items:end;gap:15px;margin-bottom:19px}.section-head h2{font-size:23px;letter-spacing:-.6px;margin:0}.section-head p{margin:5px 0 0;color:var(--muted);font-size:13px}
 .count{font-size:12px;color:#48658e;background:#eaf1fb;padding:8px 12px;border-radius:30px;font-weight:750;white-space:nowrap}
 .months{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:32px}
-.month{border:1px solid rgba(255,255,255,.20);background:rgba(5,19,43,.54);backdrop-filter:blur(8px);border-radius:12px;padding:13px 8px;color:#e2ecff;font-size:12px;font-weight:800;transition:.18s}
+.month{border:1px solid var(--line);background:#fff;border-radius:12px;padding:13px 8px;color:#53647d;font-size:12px;font-weight:800;transition:.18s}
 .month:hover,.month.active{border-color:#8bb2ed;background:#edf4ff;color:#245ca9;transform:translateY(-2px)}
 .holiday-list{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}
-.holiday{background:rgba(255,255,255,.91);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.54);border-radius:15px;padding:17px;display:flex;gap:15px;align-items:center;box-shadow:0 10px 28px rgba(0,0,0,.18)}
+.holiday{background:#fff;border:1px solid var(--line);border-radius:15px;padding:17px;display:flex;gap:15px;align-items:center;box-shadow:0 3px 12px rgba(20,38,68,.025)}
 .datebox{width:58px;min-width:58px;height:62px;border-radius:12px;background:#edf4ff;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#285da6}
 .datebox strong{font-size:22px;line-height:1}.datebox span{font-size:10px;font-weight:850;letter-spacing:1px;margin-top:5px}
 .holiday-info{min-width:0;flex:1}.holiday-info h3{font-size:15px;margin:0 0 6px;letter-spacing:-.2px}.meta{display:flex;gap:7px;align-items:center;flex-wrap:wrap;color:#7b8798;font-size:11px}.tag{background:#f0f4f9;color:#60728b;border-radius:20px;padding:4px 8px;font-weight:750}
 .empty{grid-column:1/-1;background:#fff;border:1px dashed #cbd5e1;border-radius:15px;padding:38px 20px;text-align:center;color:#718096}.empty strong{display:block;color:#33445e;margin-bottom:6px}
-footer{border-top:1px solid rgba(255,255,255,.16);background:rgba(3,12,29,.62);backdrop-filter:blur(12px);padding:22px;text-align:center;color:#d5e1f4;font-size:12px}
+footer{border-top:1px solid var(--line);padding:22px;text-align:center;color:#8a96a8;font-size:12px}
 .modal-backdrop{display:none;position:fixed;inset:0;background:rgba(9,19,35,.58);z-index:20;align-items:center;justify-content:center;padding:18px}.modal-backdrop.show{display:flex}
 .modal{width:min(620px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:18px;box-shadow:0 25px 70px rgba(0,0,0,.25);padding:23px}
 .modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:17px}.modal-head h2{margin:0;font-size:21px}.close{border:0;background:#f1f4f8;border-radius:9px;width:34px;height:34px;font-size:20px;color:#59687d}
@@ -45,21 +45,18 @@ footer{border-top:1px solid rgba(255,255,255,.16);background:rgba(3,12,29,.62);b
 .toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,20px);background:#142b4d;color:white;padding:11px 16px;border-radius:10px;font-size:13px;opacity:0;pointer-events:none;transition:.25s;z-index:50}.toast.show{opacity:1;transform:translate(-50%,0)}
 @media(max-width:800px){.search-panel{grid-template-columns:1fr 1fr}.search-btn{grid-column:1/-1}.months{grid-template-columns:repeat(4,1fr)}}
 @media(max-width:560px){.topbar{height:62px}.brand{font-size:18px}.hero{padding-top:39px;padding-bottom:42px}h1{letter-spacing:-1.7px}.search-panel{grid-template-columns:1fr;padding:15px}.search-btn{grid-column:auto}.months{grid-template-columns:repeat(3,1fr)}.holiday-list{grid-template-columns:1fr}.section-head{align-items:start;flex-direction:column}.form-grid{grid-template-columns:1fr}.form-grid .full{grid-column:auto}.year-chip{display:none}}
-/* Screenshot-inspired refreshed landing design */
-body{background:#f7fbff!important;color:#12295d}.state-background{display:none}.topbar{height:78px;background:rgba(255,255,255,.97);box-shadow:0 2px 15px rgba(27,70,137,.08)}.brand{font-size:30px;color:#0c2359}.brandmark{width:48px;height:48px;border-radius:14px;background:linear-gradient(145deg,#1d83ff,#0753c4);font-size:25px;box-shadow:0 7px 14px #1571d544}.brand span:last-child{color:#2077ec}.nav-links{display:flex;gap:9px;align-items:center}.nav-link{border:0;background:transparent;color:#10265b;font-weight:800;padding:12px 14px;border-radius:13px}.nav-link.active{background:linear-gradient(135deg,#1675eb,#0754c5);color:#fff;box-shadow:0 7px 16px #1467cb44}.hero{padding:63px max(5vw,22px) 88px;background:linear-gradient(90deg,rgba(3,20,59,.88),rgba(3,30,77,.46),rgba(2,17,50,.13)),var(--state-image) center/cover no-repeat!important}.hero:after{display:none}.hero h1{font-size:clamp(48px,7vw,78px);text-shadow:0 4px 13px rgba(0,0,0,.25)}.hero h1 .gold{color:#ffd72d}.hero p{font-size:20px;font-weight:600;text-shadow:0 2px 8px rgba(0,0,0,.4)}.hero-note{display:block;margin-top:18px;color:#fff;font-weight:600;font-size:16px}.hero-note b{color:#ffd72d}.search-panel{margin-bottom:-135px;max-width:1120px;grid-template-columns:1fr 1fr 1.2fr auto;border-radius:26px;padding:22px;box-shadow:0 18px 42px rgba(12,43,100,.26)}main{padding-top:110px;color:#12295d}.section-head h2{color:#10265b}.section-head p{color:#59719c}.months .month{background:#fff;color:#1a3970;border-color:#d8e6fa;box-shadow:0 3px 10px #2161a412}.holiday{background:#fff;border-color:#dceafa;box-shadow:0 6px 20px rgba(13,58,126,.09)}.feature-grid{max-width:1120px;margin:0 auto 40px;padding:0 22px;display:grid;grid-template-columns:1.6fr repeat(3,1fr);gap:16px}.feature{min-height:155px;padding:22px;border-radius:17px;background:#fff;border:1px solid #dce9fb;text-align:center;box-shadow:0 7px 20px rgba(13,58,126,.07)}.feature .fi{font-size:40px;display:block;margin-bottom:8px}.feature h3{font-size:18px;margin:0 0 7px;color:#11295d}.feature p{margin:0;color:#526b98;font-size:13px;line-height:1.45}.feature.primary{text-align:left}.feature.primary h2{margin:0 0 15px;color:#10265b}.reminder-strip{max-width:1120px;margin:0 auto 32px;padding:19px 27px;border-radius:22px;background:linear-gradient(100deg,#0a2b79,#174ca9);color:#fff;display:flex;justify-content:space-between;align-items:center;font-size:19px;font-weight:700;box-shadow:0 12px 26px #0a35893b}.reminder-strip b{color:#ffdb32}.reminder-strip button{border:0;border-radius:12px;background:#ffdb32;color:#142754;font-weight:800;padding:12px 18px}@media(max-width:800px){.nav-links{display:none}.feature-grid{grid-template-columns:1fr 1fr}.feature.primary{grid-column:1/-1}.search-panel{margin-bottom:0}}@media(max-width:560px){.feature-grid{grid-template-columns:1fr}.hero{padding-bottom:45px}.hero h1{font-size:45px}.reminder-strip{margin:0 20px 25px;font-size:15px;gap:13px}.reminder-strip button{padding:10px}.search-panel{grid-template-columns:1fr}}
 </style>
 </head>
-<body style="--state-image:url('https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1920&q=85')">
-<div class="state-background" id="stateBackground" aria-hidden="true"></div>
+<body>
 <header class="topbar">
-  <div class="brand"><div class="brandmark">🗓️</div><div>Chutti <span>Finder</span></div></div>
-  <div class="nav-links"><button class="nav-link active">⌂ Home</button><button class="nav-link">▣ Holidays</button><button class="nav-link">⌖ States</button><button class="nav-link" id="openAdmin">⚙ Admin</button><button class="notify-btn" id="notifyBtn">🔔</button></div>
+  <div class="brand"><div class="brandmark">✦</div><div>Chutti <span>Finder</span></div></div>
+  <div class="top-actions"><div class="year-chip">HOLIDAY CALENDAR · INDIA</div><button class="notify-btn" id="notifyBtn" title="Kal ki chhutti ka reminder on karein">🔔 Reminders</button><button class="admin-btn" id="openAdmin">Admin Login</button></div>
 </header>
 <section class="hero">
   <div class="hero-inner">
     <div class="eyebrow">YOUR HOLIDAY PLANNER</div>
-    <h1>Chutti <span class="gold">Finder</span></h1>
-    <p>Find all <span class="gold">Govt. Holidays</span> in India<br>with ease!</p><span class="hero-note">┃ Plan your holidays better, <b>stay updated always.</b></span>
+    <h1>Find your next<br>day off.</h1>
+    <p>Explore public holidays across India, discover state-wise celebrations, and plan your year with ease.</p>
     <div class="search-panel">
       <div class="field"><label for="year">Select year</label><select id="year"></select></div>
       <div class="field"><label for="region">Select region</label><select id="region"></select></div>
@@ -73,8 +70,6 @@ body{background:#f7fbff!important;color:#12295d}.state-background{display:none}.
   <div class="months" id="months"></div>
   <div class="holiday-list" id="holidayList"></div>
 </main>
-<section class="feature-grid"><div class="feature primary"><h2>📣 Upcoming Holidays</h2><p>Apne state ke upcoming public holidays check karo aur break ka plan banao.</p></div><div class="feature"><span class="fi">🗓️</span><h3>All India Holidays</h3><p>Complete Government holiday list</p></div><div class="feature"><span class="fi">📍</span><h3>State Wise Search</h3><p>Har state ki holidays dekho</p></div><div class="feature"><span class="fi">🔔</span><h3>Reminder Alerts</h3><p>Ek din pehle notification pao</p></div></section>
-<section class="reminder-strip"><span>🔔 <b>Holiday Reminder:</b> Get notified one day before the holiday!</span><button id="stayUpdated">Stay Updated ›</button></section>
 <footer>© <span id="footerYear"></span> Chutti Finder · Plan better, celebrate more.<br><span style="display:block;max-width:900px;margin:9px auto 0;line-height:1.6">Festival dates are indicative and may vary by region, calendar tradition or moon sighting. Government-declared holidays differ by state, employer and institution. 2026 festival data is a broad starter calendar; verify official notifications before relying on a date.</span></footer>
 
 <div class="modal-backdrop" id="adminModal">
@@ -106,8 +101,6 @@ body{background:#f7fbff!important;color:#12295d}.state-background{display:none}.
 <div class="toast" id="toast"></div>
 <script>
 const states=["All India","Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chhattisgarh","Goa","Gujarat","Haryana","Himachal Pradesh","Jharkhand","Karnataka","Kerala","Madhya Pradesh","Maharashtra","Manipur","Meghalaya","Mizoram","Nagaland","Odisha","Punjab","Rajasthan","Sikkim","Tamil Nadu","Telangana","Tripura","Uttar Pradesh","Uttarakhand","West Bengal","Andaman and Nicobar Islands","Chandigarh","Dadra and Nagar Haveli and Daman and Diu","Delhi","Jammu and Kashmir","Ladakh","Lakshadweep","Puducherry"];
-const stateLandmarks={"Andhra Pradesh":"Tirupati temple","Arunachal Pradesh":"Tawang monastery","Assam":"Kaziranga landscape","Bihar":"Mahabodhi Temple","Chhattisgarh":"Chitrakote Falls","Goa":"Goa beach","Gujarat":"Statue of Unity","Haryana":"Sultanpur National Park","Himachal Pradesh":"Himachal Pradesh mountains","Jharkhand":"Hundru Falls","Karnataka":"Hampi Karnataka","Kerala":"Kerala backwaters","Madhya Pradesh":"Khajuraho temple","Maharashtra":"Gateway of India Mumbai","Manipur":"Loktak Lake","Meghalaya":"Living Root Bridge Meghalaya","Mizoram":"Mizoram hills","Nagaland":"Nagaland landscape","Odisha":"Konark Sun Temple","Punjab":"Golden Temple Amritsar","Rajasthan":"Hawa Mahal Jaipur","Sikkim":"Kanchenjunga Sikkim","Tamil Nadu":"Meenakshi Temple","Telangana":"Charminar Hyderabad","Tripura":"Ujjayanta Palace","Uttar Pradesh":"Taj Mahal","Uttarakhand":"Kedarnath Temple Himalayas Uttarakhand","West Bengal":"Victoria Memorial Kolkata","Andaman and Nicobar Islands":"Andaman beach","Chandigarh":"Rock Garden Chandigarh","Dadra and Nagar Haveli and Daman and Diu":"Daman India beach","Delhi":"India Gate Delhi","Jammu and Kashmir":"Dal Lake Kashmir","Ladakh":"Pangong Lake Ladakh","Lakshadweep":"Lakshadweep beach","Puducherry":"Puducherry promenade"};
-const defaultScene="https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1920&q=85";
 const months=["January","February","March","April","May","June","July","August","September","October","November","December"];
 const base=[
  {id:"f01",name:"New Year's Day",date:"2026-01-01",category:"Observance",region:"All India",faith:"General"},
@@ -213,19 +206,7 @@ function render(){
  if(!arr.length){$("holidayList").innerHTML='<div class="empty"><strong>No holidays added yet</strong>There are no saved holidays for this selection. Admin can add holidays from the dashboard.</div>';return}
  arr.forEach(h=>{let d=prettyDate(h.date),card=document.createElement("article");card.className="holiday";card.innerHTML=`<div class="datebox"><strong>${d.day}</strong><span>${d.mon}</span></div><div class="holiday-info"><h3></h3><div class="meta"><span class="tag"></span><span class="region"></span><span class="faith"></span></div></div>`;card.querySelector("h3").textContent=h.name;card.querySelector(".tag").textContent=h.category;card.querySelector(".region").textContent=h.region;card.querySelector(".faith").textContent=h.faith||""; $("holidayList").appendChild(card)})
 }
-async function updateStateBackground(){
- const state=$("region").value,term=stateLandmarks[state]||"India tourism landscape";
- document.querySelector(".eyebrow").textContent=state==="All India"?"YOUR HOLIDAY PLANNER":state.toUpperCase()+" · HOLIDAY PLANNER";
- document.body.style.setProperty("--state-image",`url('${defaultScene}')`);
- try{
-  const endpoint="https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrnamespace=6&gsrlimit=8&prop=imageinfo&iiprop=url&iiurlwidth=1920&format=json&origin=*&gsrsearch="+encodeURIComponent(term);
-  const data=await fetch(endpoint).then(r=>r.json());
-  const pages=Object.values(data.query?.pages||{});
-  const photo=pages.map(p=>p.imageinfo?.[0]?.thumburl||p.imageinfo?.[0]?.url).find(url=>url&&/\.(jpg|jpeg|png)$/i.test(url));
-  if(photo&&$("region").value===state)document.body.style.setProperty("--state-image",`url('${photo}')`);
- }catch(e){console.log("State background could not load",e)}
-}
-$("explore").onclick=()=>{updateStateBackground();render()};$("year").onchange=render;$("region").onchange=()=>{updateStateBackground();render()};$("month").onchange=()=>{selectedMonth=$("month").value;render()};
+$("explore").onclick=render;$("year").onchange=render;$("region").onchange=render;$("month").onchange=()=>{selectedMonth=$("month").value;render()};
 $("footerYear").textContent=new Date().getFullYear();
 function toast(msg){$("toast").textContent=msg;$("toast").classList.add("show");setTimeout(()=>$("toast").classList.remove("show"),2300)}
 
@@ -264,7 +245,6 @@ $("addHoliday").onclick=()=>openForm(null);
 function openForm(id){editId=id;let h=holidays.find(x=>x.id===id);$("formTitle").textContent=h?"Edit holiday":"Add holiday";$("hName").value=h?.name||"";$("hDate").value=h?.date||$("year").value+"-01-01";$("hCategory").value=h?.category||"National";$("hRegion").value=h?.region||"All India";showModal("holidayModal")}
 $("saveHoliday").onclick=()=>{let name=$("hName").value.trim(),date=$("hDate").value;if(!name||!date){toast("Please enter a holiday name and date");return}let item={id:editId||("h"+Date.now()),name,date,category:$("hCategory").value,region:$("hRegion").value};if(editId)holidays=holidays.map(x=>x.id===editId?item:x);else holidays.push(item);save();hideModal("holidayModal");adminList();$("year").value=date.slice(0,4);$("region").value=item.region;$("month").value=date.slice(5,7);render();toast(editId?"Holiday updated":"Holiday added");editId=null};
 updateReminderButton();
-updateStateBackground();
 checkTomorrowReminder();
 setInterval(checkTomorrowReminder,60*1000);
 render();
